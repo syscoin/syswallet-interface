@@ -2,19 +2,15 @@
   "manifest_version": 3,
   "name": "Syscoin Wallet",
   "options_page": "options.html",
-  "background": [
-    {
-      "service_worker": [
-        "background.bundle.js"
-      ]
-    }
+  "permissions": [
+    "storage"
   ],
-  "action": {
-    "default_popup": "popup.html",
-    "default_icon": "icon-34.png"
+  "background": {
+    "service_worker": "background.bundle.js"
   },
-  "chrome_url_overrides": {
-    "newtab": "newtab.html"
+  "action": {
+    "default_popup": "app.html",
+    "default_icon": "icon-34.png"
   },
   "icons": {
     "128": "icon-128.png"
