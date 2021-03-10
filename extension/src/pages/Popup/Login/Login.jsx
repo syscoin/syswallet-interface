@@ -13,11 +13,11 @@ const Login = () => {
   const dispatch = useDispatch();
   const history = useHistory();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (password) {
-      dispatch(loginUser({
+      await dispatch(loginUser({
         password,
       }));
 

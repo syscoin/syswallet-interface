@@ -1,38 +1,39 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import Storage from "../helpers/Storage";
-// import { generateMnemnonic } from "bip39";
-// const bip39 = require('bip39');
+
 export const signupUser = createAsyncThunk(
   'users/signupUser',
   async ({ password }, thunkAPI) => {
     try {
       //add cryptography for password
-      await Storage.setItem('vault', password)
-      // start testing mnmonic 
-      // const seed =
-      return
+      await Storage.setItem('vault', password);
+
+      return;
+    } catch (error) {
+      console.log('Error', error);
+      return thunkAPI.rejectWithValue(error);
     }
-    catch (e) {
-      console.log('Error', e);
-      return thunkAPI.rejectWithValue(e);
-    }
-  });
+  }
+);
 
 export const loginUser = createAsyncThunk(
-  'users/login',
+  'users/loginUser',
   async ({ password }, thunkAPI) => {
     try {
       // check through cryptography hash  
-      const userPass = await Storage.getItem('vault')
+      const userPass = await Storage.getItem('vault');
+
       if (userPass !== password) {
         return thunkAPI.rejectWithValue('incorrect password');
       }
+
       sessionStorage.setItem('UserLogged', true);
+
       return;
 
-    } catch (e) {
-      console.log('Error', e);
-      thunkAPI.rejectWithValue(e);
+    } catch (error) {
+      console.log('Error', error);
+      thunkAPI.rejectWithValue(error);
     }
   }
 );
@@ -68,8 +69,7 @@ export const userSlice = createSlice({
     [signupUser.pending]: (state) => {
       state.isFetching = true;
     },
-    [signupUser.rejected]: (state, { payload }) => {
-      console.log('debug payload', payload)
+    [signupUser.rejected]: (state) => {
       state.isFetching = false;
       state.isError = true;
       state.errorMessage = 'Try allowing storage permission for this extension';
@@ -91,6 +91,5 @@ export const userSlice = createSlice({
   },
 });
 
-
-export const { signUp, login, logout } = userSlice.actions;
+export const { logout } = userSlice.actions;
 export default userSlice.reducer;

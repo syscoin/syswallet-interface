@@ -4,35 +4,29 @@ import "./index.css";
 import "../../../assets/css/tailwind.css";
 import { useHistory } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { signUp, login, signupUser } from "../../../store/auth";
+import { loginUser, signupUser } from "../../../store/auth";
 import Header from "../../../components/Header/Header";
 
 const CreateAccount = () => {
   const checkbox = document.querySelector("#agree");
-  // const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const dispatch = useDispatch();
   const history = useHistory();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (password && checkbox.checked) {
-      dispatch(signupUser({
-        // email,
+      await dispatch(signupUser({
         password,
       }));
 
+      await dispatch(loginUser({
+        password,
+      }));
 
-      // After sign go to confirm key-phrase page
-      // dispatch(login({
-      //   email,
-      //   password,
-      // }));
-
-      // history.push("/confirm-keyphrase")
-      // history.push("/dashboard");
+      history.push("/confirm-keyphrase");
     }
 
     return false;
@@ -51,18 +45,6 @@ const CreateAccount = () => {
 
         <form className="w-full p-4 ml-2 mr-2" onSubmit={(e) => handleSubmit(e)}>
           <fieldset className="flex flex-col justify-center items-center w-full">
-            {/* Confirm password */}
-            {/* <input
-              type="email"
-              name="emai"
-              id="email"
-              required
-              placeholder="E-mail"
-              className="border border-gray-300 p-4 rounded-full w-full"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            /> */}
-
             <input
               type="password"
               name="password"
@@ -73,6 +55,7 @@ const CreateAccount = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
+
             {/* Something like this */}
             {/* <input 
             name="passwordConfirmed"
@@ -83,6 +66,7 @@ const CreateAccount = () => {
             className="border border-gray-300 p-4 rounded-full w-full mt-6"
             required
             /> */}
+
           </fieldset>
 
           <div className="mt-4 mr-32">
