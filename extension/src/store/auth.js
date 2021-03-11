@@ -69,10 +69,10 @@ export const userSlice = createSlice({
     [signupUser.pending]: (state) => {
       state.isFetching = true;
     },
-    [signupUser.rejected]: (state) => {
+    [signupUser.rejected]: (state, { errorMessage }) => {
       state.isFetching = false;
       state.isError = true;
-      state.errorMessage = 'Try allowing storage permission for this extension';
+      state.errorMessage = errorMessage;
     },
     [loginUser.fulfilled]: (state) => {
       state.isFetching = false;
