@@ -1,17 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import logo from '../../../assets/img/logo.svg';
 import "./index.css";
 import "../../../assets/css/tailwind.css";
-import { useHistory } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { loginUser, signupUser } from "../../../store/auth";
+import logo from '../../../assets/img/logo.svg';
 import Header from "../../../components/Header/Header";
+import Loading from "../../../components/Loading/Loading";
+import { useHistory } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { loginUser, signupUser, selectUser } from "../../../store/auth";
 
 const CreateAccount = () => {
   const checkbox = document.querySelector("#agree");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [isValid, setIsValid] = useState(false);
+
+  const { isFetching } = useSelector(selectUser);
 
   const dispatch = useDispatch();
   const history = useHistory();
@@ -23,8 +26,8 @@ const CreateAccount = () => {
     confirmPassword
   ]);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async (event) => {
+    event.preventDefault();
 
     if (isValid && checkbox.checked) {
       await dispatch(signupUser({
@@ -50,7 +53,7 @@ const CreateAccount = () => {
           className="w-1/2"
         />
 
-        <form className="w-full p-4 pt-0 ml-2 mr-2" onSubmit={(e) => handleSubmit(e)}>
+        <form className="w-full p-4 pt-0 ml-2 mr-2" onSubmit={(event) => handleSubmit(event)}>
           <fieldset className="flex flex-col justify-center items-center w-full">
             <input
               type="password"
@@ -61,7 +64,7 @@ const CreateAccount = () => {
               maxLength="16"
               placeholder="Password"
               className="border border-gray-300 p-4 rounded-full w-full mt-2 outline-none focus:border-blue-300"
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={(event) => setPassword(event.target.value)}
             />
 
             <input
@@ -73,7 +76,7 @@ const CreateAccount = () => {
               title="Your password must be between 8 and 16 characters"
               className={isValid ? "border border-gray-300 p-4 rounded-full w-full mt-2 outline-none focus:border-blue-300" : "border border-red-500 p-4 rounded-full w-full mt-2 outline-none"}
               required
-              onChange={(e) => setConfirmPassword(e.target.value)}
+              onChange={(event) => setConfirmPassword(event.target.value)}
             />
 
             {isValid ? (
@@ -88,7 +91,8 @@ const CreateAccount = () => {
                 >
                   Passwords do not match, please retype
                 </small>
-              )}
+              )
+            }
 
           </fieldset>
 
@@ -110,9 +114,11 @@ const CreateAccount = () => {
           <div className="flex justify-center items-center mt-6">
             <button
               type="submit"
-              className="mb-4 border-2 border-blue-300 bg-transparent rounded-full p-4 w-1/2 font-bold text-gray-600 text-center transition-all duration-300 hover:bg-blue-300"
+              className="flex justify-center items-center mb-4 border-2 border-blue-300 bg-transparent rounded-full p-4 w-1/2 font-bold text-gray-600 text-center transition-all duration-300 hover:bg-blue-300"
             >
-              Create account
+              {isFetching ? (
+                <Loading />
+              ) : 'Create account'}
             </button>
           </div>
         </form>

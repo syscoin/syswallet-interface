@@ -1,9 +1,10 @@
 import React from "react";
-import logo from "../../../assets/img/logo.svg";
-import Header from "../../../components/Header/Header";
-import { Link } from "react-router-dom";
 import "./index.css";
 import "../../../assets/css/tailwind.css";
+import logo from "../../../assets/img/logo.svg";
+import rightArrow from "../../../assets/icon/right-arrow.svg";
+import Header from "../../../components/Header/Header";
+import { Link } from "react-router-dom";
 
 const Welcome = () => {
   return (
@@ -34,7 +35,17 @@ const Welcome = () => {
         </Link>
       </div>
 
-      <p className="mb-4 font-bold text-gray-300 text-xs p-4">&rarr; Restore account from seed phrase. </p>
+      <div className="p-4 flex items-center cursor-pointer">
+        <img
+          src={rightArrow}
+          alt="restore account from seed phrase"
+          className="h-2 w-2 mr-2"
+        />
+        <p className="font-bold text-gray-700 text-xs">
+          Restore account from seed phrase.
+      </p>
+      </div>
+
     </div>
   );
 };

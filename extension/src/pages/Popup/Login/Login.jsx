@@ -1,27 +1,27 @@
 import React, { useState, useEffect } from "react";
 import "./index.css";
 import "../../../assets/css/tailwind.css";
+import 'react-toastify/dist/ReactToastify.css';
+import logo from "../../../assets/img/logo.svg";
+import Header from "../../../components/Header/Header";
+import Loading from "../../../components/Loading/Loading";
 import { useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { loginUser } from "../../../store/auth";
-import Header from "../../../components/Header/Header";
-import logo from "../../../assets/img/logo.svg";
-import { selectUser } from "../../../store/auth";
+import { selectUser, loginUser } from "../../../store/auth";
+import { ToastContainer, toast } from 'react-toastify';
 
 const Login = () => {
   const [password, setPassword] = useState("");
 
   const dispatch = useDispatch();
   const history = useHistory();
-  const { userPassword, isFetching, isError, errorMessage, isSuccess } = useSelector(selectUser);
-  console.log('user pwd', userPassword)
-  console.log('isfetch', isFetching)
-  console.log('error', isError)
-  console.log('succ', isSuccess)
-  console.log('msg err', errorMessage)
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const { isFetching, isError, errorMessage } = useSelector(selectUser);
+
+  console.log(isFetching)
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
 
     if (password) {
       await dispatch(loginUser({
@@ -33,6 +33,24 @@ const Login = () => {
 
     return false;
   }
+
+  const handleMessage = (message) => {
+    toast.error(message, {
+      position: toast.POSITION.BOTTOM_CENTER
+    });
+  };
+
+  const handleBlur = (event) => {
+    setPassword(event.target.value);
+  };
+
+  useEffect(() => {
+    if (isError) {
+      handleMessage(errorMessage);
+    }
+  }, [
+    isError,
+  ]);
 
   return (
     <div>
@@ -46,25 +64,28 @@ const Login = () => {
         />
         <h1 className="font-bold text-gray-700 text-4xl mb-4">Welcome back :)</h1>
 
-        <form className="w-full p-4 ml-2 mr-2" onSubmit={(e) => handleSubmit(e)}>
+        <form className="w-full p-4 ml-2 mr-2" onSubmit={(event) => handleSubmit(event)}>
           <fieldset className="flex flex-col justify-center items-center w-full">
             <input
-              value={password}
               type="password"
               name="password"
               id="password"
               required
               placeholder="Password"
               className="border border-gray-300 p-4 rounded-full w-full mt-6"
-              onChange={(e) => setPassword(e.target.value)}
+              onBlur={handleBlur}
             />
           </fieldset>
+
+          <ToastContainer />
 
           <div className="flex justify-center items-center mt-6">
             <button
               type="submit"
-              className="mb-2 border-2 border-blue-300 bg-transparent rounded-full p-4 w-1/2 font-bold text-gray-600 text-center transition-all duration-300 hover:bg-blue-300">
-              Login
+              className="flex justify-center items-center mb-2 border-2 border-blue-300 bg-transparent rounded-full p-4 w-1/2 font-bold text-gray-600 text-center transition-all duration-300 hover:bg-blue-300">
+              {isFetching ? (
+                <Loading />
+              ) : 'Login'}
             </button>
           </div>
         </form>

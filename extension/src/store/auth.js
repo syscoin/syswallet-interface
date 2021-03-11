@@ -8,9 +8,8 @@ export const signupUser = createAsyncThunk(
       //add cryptography for password
       await Storage.setItem('vault', password);
 
-      return password;
+      return;
     } catch (error) {
-      console.log('Error', error);
       return thunkAPI.rejectWithValue(error);
     }
   }
@@ -24,15 +23,13 @@ export const loginUser = createAsyncThunk(
       const userPass = await Storage.getItem('vault');
 
       if (userPass !== password) {
-        return thunkAPI.rejectWithValue('incorrect password');
+        return thunkAPI.rejectWithValue('Incorrect password. Try again.');
       }
 
       sessionStorage.setItem('UserLogged', true);
 
-      return userPass;
-
+      return;
     } catch (error) {
-      console.log('Error', error);
       thunkAPI.rejectWithValue(error);
     }
   }
@@ -62,29 +59,29 @@ export const userSlice = createSlice({
     }
   },
   extraReducers: {
-    [signupUser.fulfilled]: (state, action) => {
+    [signupUser.fulfilled]: (state, { payload }) => {
       state.isFetching = false;
       state.isSuccess = true;
-      state.userPassword = action.payload;
+      state.userPassword = payload;
     },
     [signupUser.pending]: (state) => {
       state.isFetching = true;
     },
-    [signupUser.rejected]: (state, action) => {
+    [signupUser.rejected]: (state, { payload }) => {
       state.isFetching = false;
       state.isError = true;
-      state.errorMessage = action.payload;
+      state.errorMessage = payload;
     },
     [loginUser.fulfilled]: (state, action) => {
       state.isFetching = false;
-      state.isError = false;
       state.isSuccess = true;
       state.userPassword = action.payload;
+      return state;
     },
-    [loginUser.rejected]: (state, action) => {
+    [loginUser.rejected]: (state, { payload }) => {
       state.isFetching = false;
       state.isError = true;
-      state.errorMessage = action.payload;
+      state.errorMessage = payload;
     },
     [loginUser.pending]: (state) => {
       state.isFetching = true;
@@ -92,7 +89,7 @@ export const userSlice = createSlice({
   },
 });
 
-export const { logout } = userSlice.actions;
+export const { logout, clearState } = userSlice.actions;
 export const selectUser = (state) => state.user;
 
 export default userSlice.reducer;
