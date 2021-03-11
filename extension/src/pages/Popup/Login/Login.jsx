@@ -2,16 +2,23 @@ import React, { useState, useEffect } from "react";
 import "./index.css";
 import "../../../assets/css/tailwind.css";
 import { useHistory } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { loginUser } from "../../../store/auth";
 import Header from "../../../components/Header/Header";
 import logo from "../../../assets/img/logo.svg";
+import { selectUser } from "../../../store/auth";
 
 const Login = () => {
   const [password, setPassword] = useState("");
 
   const dispatch = useDispatch();
   const history = useHistory();
+  const { userPassword, isFetching, isError, errorMessage, isSuccess } = useSelector(selectUser);
+  console.log('user pwd', userPassword)
+  console.log('isfetch', isFetching)
+  console.log('error', isError)
+  console.log('succ', isSuccess)
+  console.log('msg err', errorMessage)
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -41,7 +48,6 @@ const Login = () => {
 
         <form className="w-full p-4 ml-2 mr-2" onSubmit={(e) => handleSubmit(e)}>
           <fieldset className="flex flex-col justify-center items-center w-full">
-
             <input
               value={password}
               type="password"

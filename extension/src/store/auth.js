@@ -8,7 +8,7 @@ export const signupUser = createAsyncThunk(
       //add cryptography for password
       await Storage.setItem('vault', password);
 
-      return;
+      return password;
     } catch (error) {
       console.log('Error', error);
       return thunkAPI.rejectWithValue(error);
@@ -29,7 +29,7 @@ export const loginUser = createAsyncThunk(
 
       sessionStorage.setItem('UserLogged', true);
 
-      return;
+      return userPass;
 
     } catch (error) {
       console.log('Error', error);
@@ -41,7 +41,7 @@ export const loginUser = createAsyncThunk(
 export const userSlice = createSlice({
   name: 'user',
   initialState: {
-    user: null,
+    userPassword: null,
     isFetching: false,
     isSuccess: false,
     isError: false,
@@ -56,34 +56,35 @@ export const userSlice = createSlice({
       return state;
     },
     logout: (state) => {
-      state.user = null;
+      state.userPassword = null;
 
       sessionStorage.setItem('UserLogged', false);
     }
   },
   extraReducers: {
-    [signupUser.fulfilled]: (state) => {
+    [signupUser.fulfilled]: (state, action) => {
       state.isFetching = false;
       state.isSuccess = true;
+      state.userPassword = action.payload;
     },
     [signupUser.pending]: (state) => {
       state.isFetching = true;
     },
-    [signupUser.rejected]: (state) => {
+    [signupUser.rejected]: (state, action) => {
       state.isFetching = false;
       state.isError = true;
-      state.errorMessage = 'Try allowing storage permission for this extension';
+      state.errorMessage = action.payload;
     },
-    [loginUser.fulfilled]: (state) => {
+    [loginUser.fulfilled]: (state, action) => {
       state.isFetching = false;
+      state.isError = false;
       state.isSuccess = true;
-      return state;
+      state.userPassword = action.payload;
     },
-    [loginUser.rejected]: (state, { errorMessage }) => {
-      console.log('payload', errorMessage);
+    [loginUser.rejected]: (state, action) => {
       state.isFetching = false;
       state.isError = true;
-      state.errorMessage = errorMessage;
+      state.errorMessage = action.payload;
     },
     [loginUser.pending]: (state) => {
       state.isFetching = true;
@@ -92,4 +93,6 @@ export const userSlice = createSlice({
 });
 
 export const { logout } = userSlice.actions;
+export const selectUser = (state) => state.user;
+
 export default userSlice.reducer;
