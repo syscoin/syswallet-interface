@@ -114,6 +114,9 @@ var options = {
     extensions: fileExtensions
       .map((extension) => '.' + extension)
       .concat(['.js', '.jsx', '.ts', '.tsx', '.css']),
+    fallback: {
+      "crypto": require.resolve("crypto-browserify"),
+    },
   },
   plugins: [
     new webpack.ProvidePlugin({

@@ -9,15 +9,15 @@ import circle from "../../../assets/icon/oval.png";
 
 const Dashboard = () => {
   const RenderIcon = () => {
-    return icons.map(item => {
+    return icons.map(({ icon, path }) => {
       return (
-        <div key={item.icon}>
+        <div key={icon}>
           <img
-            src={item.path} 
-            alt={item.icon}
+            src={path} 
+            alt={icon}
             className="transition-all duration-300 hover:bg-blue-100 w-10 h-10 p-2 mx-2 rounded-full border border-gray-400 cursor-pointer"
           />
-          <p className="text-blue-400 font-bold text-xs text-center mt-2">{item.icon}</p>
+          <p className="text-blue-400 font-bold text-xs text-center mt-2">{icon}</p>
         </div>
       );
     });
@@ -56,7 +56,7 @@ const Dashboard = () => {
           alt="logo ethereum"
           className="h-12 w-12 p-2 rounded-full border border-gray-300 mb-2"
         />
-
+        
         <h3 className="text-gray-600 text-base font-bold">0 ETH</h3>
         <small className="text-gray-400 text-base font-bold">$0.00 USD</small>
       </div>

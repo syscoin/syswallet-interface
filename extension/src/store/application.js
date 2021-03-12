@@ -1,18 +1,11 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import Storage from '../helpers/Storage';
-import { encrypt, decrypt } from '../helpers/crypto';
+import Storage from "../helpers/Storage";
 
 export const signupUser = createAsyncThunk(
-  'users/signupUser',
+  'application/signupUser',
   async ({ password }, thunkAPI) => {
     try {
       //add cryptography for password
-      const encryptedPassword = encrypt(password, '123422');
-
-      console.log('encrypted', encryptedPassword)
-
-      console.log('pass', password)
-
       await Storage.setItem('vault', password);
     } catch (error) {
       return thunkAPI.rejectWithValue(error);
@@ -21,7 +14,7 @@ export const signupUser = createAsyncThunk(
 );
 
 export const loginUser = createAsyncThunk(
-  'users/loginUser',
+  'application/loginUser',
   async ({ password }, thunkAPI) => {
     try {
       // check through cryptography hash  
@@ -38,8 +31,8 @@ export const loginUser = createAsyncThunk(
   }
 );
 
-export const authSlice = createSlice({
-  name: 'auth',
+export const appSlice = createSlice({
+  name: 'applicationState',
   initialState: {
     userPassword: null,
     isFetching: false,
@@ -89,7 +82,7 @@ export const authSlice = createSlice({
   },
 });
 
-export const { logout, clearState } = authSlice.actions;
-export const selectUser = (state) => state.auth;
+export const { logout, clearState } = appSlice.actions;
+export const selectState = (state) => state.applicationState;
 
-export default authSlice.reducer;
+export default appSlice.reducer;

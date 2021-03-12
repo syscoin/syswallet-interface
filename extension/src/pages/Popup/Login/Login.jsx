@@ -18,8 +18,6 @@ const Login = () => {
 
   const { isFetching, isError, errorMessage } = useSelector(selectUser);
 
-  console.log(isFetching)
-
   const handleSubmit = async (event) => {
     event.preventDefault();
 
@@ -36,7 +34,7 @@ const Login = () => {
 
   const handleMessage = (message) => {
     toast.error(message, {
-      position: toast.POSITION.BOTTOM_CENTER
+      position: toast.POSITION.TOP_CENTER
     });
   };
 
@@ -64,7 +62,7 @@ const Login = () => {
         />
         <h1 className="font-bold text-gray-700 text-4xl mb-4">Welcome back :)</h1>
 
-        <form className="w-full p-4 ml-2 mr-2" onSubmit={(event) => handleSubmit(event)}>
+        <form className="w-full p-4 ml-2 mr-2" onSubmit={handleSubmit}>
           <fieldset className="flex flex-col justify-center items-center w-full">
             <input
               type="password"
@@ -82,7 +80,8 @@ const Login = () => {
           <div className="flex justify-center items-center mt-6">
             <button
               type="submit"
-              className="flex justify-center items-center mb-2 border-2 border-blue-300 bg-transparent rounded-full p-4 w-1/2 font-bold text-gray-600 text-center transition-all duration-300 hover:bg-blue-300">
+              className="flex justify-center items-center mb-2 border-2 border-blue-300 bg-transparent rounded-full p-4 w-1/2 font-bold text-gray-600 text-center transition-all duration-300 hover:bg-blue-300"
+            >
               {isFetching ? (
                 <Loading />
               ) : 'Login'}

@@ -26,6 +26,8 @@ const CreateAccount = () => {
     confirmPassword
   ]);
 
+  const passwordGreaterThan8 = password.length >= 8 && confirmPassword.length >= 8;
+
   const handleSubmit = async (event) => {
     event.preventDefault();
 
@@ -53,7 +55,7 @@ const CreateAccount = () => {
           className="w-1/2"
         />
 
-        <form className="w-full p-4 pt-0 ml-2 mr-2" onSubmit={(event) => handleSubmit(event)}>
+        <form className="w-full p-4 pt-0 ml-2 mr-2" onSubmit={handleSubmit}>
           <fieldset className="flex flex-col justify-center items-center w-full">
             <input
               type="password"
@@ -62,9 +64,10 @@ const CreateAccount = () => {
               required
               minLength="8"
               maxLength="16"
+              title="Your password must be between 8 and 16 characters"
               placeholder="Password"
               className="border border-gray-300 p-4 rounded-full w-full mt-2 outline-none focus:border-blue-300"
-              onChange={(event) => setPassword(event.target.value)}
+              onBlur={(event) => setPassword(event.target.value)}
             />
 
             <input
@@ -74,16 +77,16 @@ const CreateAccount = () => {
               minLength="8"
               maxLength="16"
               title="Your password must be between 8 and 16 characters"
-              className={isValid ? "border border-gray-300 p-4 rounded-full w-full mt-2 outline-none focus:border-blue-300" : "border border-red-500 p-4 rounded-full w-full mt-2 outline-none"}
+              className="border border-gray-300 p-4 rounded-full w-full mt-2 outline-none focus:border-blue-300"
               required
-              onChange={(event) => setConfirmPassword(event.target.value)}
+              onBlur={(event) => setConfirmPassword(event.target.value)}
             />
 
             {isValid ? (
               <small
-                className="text-gray-500 text-xs font-bold my-2"
+                className={passwordGreaterThan8 ? "text-green-500 text-xs font-bold my-2" : "text-gray-500 text-xs font-bold my-2"}
               >
-                Your password must be between 8 and 16 characters
+                {passwordGreaterThan8 ? "Valid password ✓" : " Your password must be between 8 and 16 characters"}
               </small>
             ) : (
                 <small
@@ -93,7 +96,6 @@ const CreateAccount = () => {
                 </small>
               )
             }
-
           </fieldset>
 
           <div className="mt-4 mr-32">
@@ -113,8 +115,9 @@ const CreateAccount = () => {
 
           <div className="flex justify-center items-center mt-6">
             <button
+              disabled={!isValid}
               type="submit"
-              className="flex justify-center items-center mb-4 border-2 border-blue-300 bg-transparent rounded-full p-4 w-1/2 font-bold text-gray-600 text-center transition-all duration-300 hover:bg-blue-300"
+              className="disabled:opacity-20 flex justify-center items-center mb-4 border-2 border-blue-300 bg-transparent rounded-full p-4 w-1/2 font-bold text-gray-600 text-center transition-all duration-300 hover:bg-blue-300"
             >
               {isFetching ? (
                 <Loading />

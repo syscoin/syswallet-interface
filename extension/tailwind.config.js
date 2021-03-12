@@ -5,11 +5,11 @@ module.exports = {
     extend: {
       gridTemplateColumns: {
         '30/100': '30% minmax(30%, 1fr) 30%',
-       }
+      }
     },
   },
   variants: {
-    extend: {},
+    backgroundColor: ({ after }) => after(['disabled'])
   },
   plugins: [],
 }
