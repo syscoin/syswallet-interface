@@ -6,14 +6,9 @@ export const signupUser = createAsyncThunk(
   'users/signupUser',
   async ({ password }, thunkAPI) => {
     try {
-      //add cryptography for password
-      const encryptedPassword = encrypt(password, '123422');
+      const encryptedPassword = await encrypt(password, 'fake-key');
 
-      console.log('encrypted', encryptedPassword)
-
-      console.log('pass', password)
-
-      await Storage.setItem('vault', password);
+      await Storage.setItem('vault', encryptedPassword);
     } catch (error) {
       return thunkAPI.rejectWithValue(error);
     }
@@ -24,10 +19,10 @@ export const loginUser = createAsyncThunk(
   'users/loginUser',
   async ({ password }, thunkAPI) => {
     try {
-      // check through cryptography hash  
       const userPass = await Storage.getItem('vault');
-
-      if (userPass !== password) {
+      const decryptedPassword = await decrypt(userPass.encrypted, 'fake-key', userPass.keySalt);
+      
+      if (password !== decryptedPassword) {
         throw new Error('Incorrect password. Try again.');
       }
 
@@ -73,10 +68,10 @@ export const authSlice = createSlice({
       state.isError = true;
       state.errorMessage = payload;
     },
-    [loginUser.fulfilled]: (state, action) => {
+    [loginUser.fulfilled]: (state, { payload }) => {
       state.isFetching = false;
       state.isSuccess = true;
-      state.userPassword = action.payload;
+      state.userPassword = payload;
     },
     [loginUser.rejected]: (state, { payload }) => {
       state.isFetching = false;

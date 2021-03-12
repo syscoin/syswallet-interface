@@ -86,7 +86,7 @@ const CreateAccount = () => {
               <small
                 className={passwordGreaterThan8 ? "text-green-500 text-xs font-bold my-2" : "text-gray-500 text-xs font-bold my-2"}
               >
-                {passwordGreaterThan8 ? "Valid password ✓" : " Your password must be between 8 and 16 characters"}
+                {passwordGreaterThan8 ? "Valid password" : "Your password must be between 8 and 16 characters"}
               </small>
             ) : (
                 <small
