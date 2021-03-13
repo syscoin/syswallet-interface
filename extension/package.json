@@ -34,7 +34,8 @@
     "redux-devtools-extension": "^2.13.9",
     "stream": "^0.0.2",
     "stream-browserify": "^3.0.0",
-    "syscoinjs-lib": "^1.0.110"
+    "syscoinjs-lib": "^1.0.110",
+    "webext-redux": "^2.1.7"
   },
   "devDependencies": {
     "@babel/core": "^7.12.17",

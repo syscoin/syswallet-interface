@@ -8,6 +8,7 @@ import Loading from "../../../components/Loading/Loading";
 import { useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { selectUser, loginUser } from "../../../store/auth";
+import { updateLastLogin, userIsLogged } from "../../../store/application";
 import { ToastContainer, toast } from 'react-toastify';
 
 const Login = () => {
@@ -26,7 +27,12 @@ const Login = () => {
         password,
       }));
 
+      await dispatch(updateLastLogin(Date.now()));
+      await dispatch(userIsLogged(true));
+
       history.push("/dashboard");
+
+      return;
     }
 
     return false;

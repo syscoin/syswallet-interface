@@ -21,12 +21,13 @@ export const loginUser = createAsyncThunk(
     try {
       const userPass = await Storage.getItem('vault');
       const decryptedPassword = await decrypt(userPass.encrypted, 'fake-key', userPass.keySalt);
-      
+
       if (password !== decryptedPassword) {
         throw new Error('Incorrect password. Try again.');
       }
 
-      sessionStorage.setItem('UserLogged', true);
+      await Storage.setItem('UserLogged', true);
+      await Storage.setItem('LastLoginAt', Date.now());
     } catch (error) {
       return thunkAPI.rejectWithValue(error.message);
     }
@@ -36,7 +37,6 @@ export const loginUser = createAsyncThunk(
 export const authSlice = createSlice({
   name: 'auth',
   initialState: {
-    userPassword: null,
     isFetching: false,
     isSuccess: false,
     isError: false,
@@ -48,11 +48,6 @@ export const authSlice = createSlice({
       state.isSuccess = false;
       state.isFetching = false;
     },
-    logout: (state) => {
-      state.userPassword = null;
-
-      sessionStorage.setItem('UserLogged', false);
-    }
   },
   extraReducers: {
     [signupUser.fulfilled]: (state, { payload }) => {
@@ -84,7 +79,7 @@ export const authSlice = createSlice({
   },
 });
 
-export const { logout, clearState } = authSlice.actions;
+export const { clearState } = authSlice.actions;
 export const selectUser = (state) => state.auth;
 
 export default authSlice.reducer;

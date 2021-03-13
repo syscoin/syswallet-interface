@@ -7,6 +7,7 @@ import Loading from "../../../components/Loading/Loading";
 import { useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { loginUser, signupUser, selectUser } from "../../../store/auth";
+import { updateLastLogin, userIsLogged } from "../../../store/application";
 
 const CreateAccount = () => {
   const checkbox = document.querySelector("#agree");
@@ -26,7 +27,7 @@ const CreateAccount = () => {
     confirmPassword
   ]);
 
-  const passwordGreaterThan8 = password.length >= 8 && confirmPassword.length >= 8;
+  const passwordIsGreaterThan8 = password.length >= 8 && confirmPassword.length >= 8;
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -39,6 +40,9 @@ const CreateAccount = () => {
       await dispatch(loginUser({
         password,
       }));
+
+      dispatch(updateLastLogin(Date.now()));
+      dispatch(userIsLogged(true));
 
       history.push("/confirm-keyphrase");
     }
@@ -84,9 +88,9 @@ const CreateAccount = () => {
 
             {isValid ? (
               <small
-                className={passwordGreaterThan8 ? "text-green-500 text-xs font-bold my-2" : "text-gray-500 text-xs font-bold my-2"}
+                className={passwordIsGreaterThan8 ? "text-green-500 text-xs font-bold my-2" : "text-gray-500 text-xs font-bold my-2"}
               >
-                {passwordGreaterThan8 ? "Valid password" : "Your password must be between 8 and 16 characters"}
+                {passwordIsGreaterThan8 ? "Valid password" : "Your password must be between 8 and 16 characters"}
               </small>
             ) : (
                 <small
