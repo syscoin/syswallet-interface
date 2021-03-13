@@ -1,16 +1,16 @@
 import { createSlice } from '@reduxjs/toolkit';
 import Storage from '../helpers/Storage';
 
-export const userIsLogged = createAsyncThunk(
-  'application/userIsLogged',
-  async ({ data }, thunkAPI) => {
-    try {
-      await Storage.setItem('LastLoginAt', data);
-    } catch (error) {
-      return thunkAPI.rejectWithValue(error.message);
-    }
-  }
-);
+// export const userIsLogged = createAsyncThunk(
+//   'application/userIsLogged',
+//   async ({ data }, thunkAPI) => {
+//     try {
+//       await Storage.setItem('LastLoginAt', data);
+//     } catch (error) {
+//       return thunkAPI.rejectWithValue(error.message);
+//     }
+//   }
+// );
 
 // export const logout = createAsyncThunk(
 //   'application/logout',
