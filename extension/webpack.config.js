@@ -10,8 +10,7 @@ var webpack = require('webpack'),
 const ASSET_PATH = process.env.ASSET_PATH || '/';
 
 var alias = {
-  'react-dom': '@hot-loader/react-dom',
-  'process': 'process/browser'
+  'react-dom': '@hot-loader/react-dom'
 };
 
 // load the secrets
@@ -47,6 +46,7 @@ var options = {
     createAccount: path.join(__dirname, 'src', 'pages', 'Popup', 'CreateAccount', 'index.jsx'),
     login: path.join(__dirname, 'src', 'pages', 'Popup', 'Login', 'index.jsx'),
     dashboard: path.join(__dirname, 'src', 'pages', 'Popup', 'Dashboard', 'index.jsx'),
+    confirmKeyPhrase: path.join(__dirname, 'src', 'pages', 'Popup', 'ConfirmKeyPhrase', 'index.jsx'),
   },
   chromeExtensionBoilerplate: {
     notHotReload: ['contentScript', 'devtools'],
@@ -113,6 +113,18 @@ var options = {
     extensions: fileExtensions
       .map((extension) => '.' + extension)
       .concat(['.js', '.jsx', '.ts', '.tsx', '.css']),
+    fallback: {
+      "crypto": require.resolve("crypto-browserify"),
+      "stream": require.resolve("stream-browserify"),
+      "assert": require.resolve("assert/"),
+      "constants": require.resolve("constants-browserify"),
+      "path": require.resolve("path-browserify"),
+      "http": require.resolve("stream-http"),
+      "https": require.resolve("https-browserify"),
+      "os": require.resolve("os-browserify/browser"),
+      "fs": require.resolve("fs-extra")
+
+    },
   },
   plugins: [
     new webpack.ProvidePlugin({
@@ -219,6 +231,12 @@ var options = {
       template: path.join(__dirname, 'src', 'pages', 'Popup', 'Dashboard', 'index.html'),
       filename: 'dashboard.html',
       chunks: ['dashboard'],
+      cache: false,
+    }),
+    new HtmlWebpackPlugin({
+      template: path.join(__dirname, 'src', 'pages', 'Popup', 'ConfirmKeyPhrase', 'index.html'),
+      filename: 'confirm-keyphrase.html',
+      chunks: ['confirmKeyPhrase'],
       cache: false,
     }),
   ],

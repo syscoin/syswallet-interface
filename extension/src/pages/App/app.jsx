@@ -1,15 +1,49 @@
 import React, { Component } from "react";
+import AppRoute from "./routes/route";
+import Storage from '../../helpers/Storage';
 import { Switch, Router } from "react-router-dom";
 import { authProtectedRoutes, publicRoutes } from "./routes/";
-import AppRoute from "./routes/route";
 import { createBrowserHistory } from "history";
+import { userIsLogged, setFirstTimeAccount, logout } from "../../store/application";
+import { connect } from 'react-redux';
 
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = {};
-    sessionStorage.setItem("UserLogged", false);
     this.history = createBrowserHistory();
+
+    this.checkAccount();
+  }
+
+  async checkAccount() {
+
+
+
+    const account = await Storage.getItem('LastkeySalt');
+
+    if (!account) {
+      this.props.setFirstTimeAccount();
+      this.history.push("/welcome");
+
+      return;
+    }
+
+    const lastLoginAt = await Storage.getItem('LastLoginAt');
+
+    this.history.push("/login");
+    // TODO: This lock function needs to be moved to background
+    // const isGreaterThanOneHour = !lastLoginAt || (Date.now() - lastLoginAt) > (60 * 1000); // 1min 
+
+    // if (isGreaterThanOneHour) {
+    //   this.props.logout();
+
+    //   // if an hour (or 1min) has passed, redirect to login
+    //   this.history.push("/login");
+    // } else {
+    //   this.props.userIsLogged(true);
+    //   this.history.push("/dashboard");
+    // }
   }
 
   render() {
@@ -40,4 +74,13 @@ class App extends Component {
     );
   }
 }
-export default (App);
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    userIsLogged: (data) => dispatch(userIsLogged(data)),
+    setFirstTimeAccount: () => dispatch(setFirstTimeAccount()),
+    logout: () => dispatch(logout())
+  }
+};
+
+export default connect(null, mapDispatchToProps)(App);

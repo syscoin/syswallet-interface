@@ -1,88 +1,115 @@
-import React, { useState } from 'react';
-import logo from '../../../assets/img/logo.svg';
+import React, { useState, useEffect } from 'react';
 import "./index.css";
 import "../../../assets/css/tailwind.css";
-import { useHistory } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { signUp, login, signupUser } from "../../../store/auth";
+import logo from '../../../assets/img/logo.svg';
 import Header from "../../../components/Header/Header";
+import Loading from "../../../components/Loading/Loading";
+import { useHistory } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { loginUser, signupUser, selectUser } from "../../../store/auth";
+import { updateLastLogin, userIsLogged } from "../../../store/application";
 
 const CreateAccount = () => {
   const checkbox = document.querySelector("#agree");
-  // const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [isValid, setIsValid] = useState(false);
+
+
+  // TODO: add messages on UseSelect cases if error , if is success ( dispatch clearState , dispatch useLogin) --> if UserLogin success go to keyphrase
+  const { isFetching, isError, errorMessage, isSuccess } = useSelector(selectUser);
+
 
   const dispatch = useDispatch();
   const history = useHistory();
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  useEffect(() => {
+    setIsValid(password == confirmPassword);
+    // if (isError) {
+    //   handleMessage(errorMessage);
+    // }
+    if (isSuccess) {
+      history.push("/confirm-keyphrase");
+    }
+  }, [
+    password,
+    confirmPassword,
+    isSuccess
+  ]);
 
-    if (password && checkbox.checked) {
-      dispatch(signupUser({
-        // email,
+  const passwordIsGreaterThan8 = password.length >= 8 && confirmPassword.length >= 8;
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
+    if (isValid && checkbox.checked) {
+      await dispatch(signupUser({
         password,
       }));
 
+      await dispatch(loginUser({
+        password,
+      }));
 
-      // After sign go to confirm key-phrase page
-      // dispatch(login({
-      //   email,
-      //   password,
-      // }));
+      // dispatch(updateLastLogin(Date.now()));
+      // dispatch(userIsLogged(true));
 
-      // history.push("/confirm-keyphrase")
-      // history.push("/dashboard");
+
     }
-
-    return false;
   }
 
   return (
     <div>
       <Header authPage />
 
-      <div className="text-center mt-16 p-2 pb-0 flex flex-col items-center">
+      <div className="text-center mt-8 p-2 pb-0 flex flex-col items-center">
         <img
           src={logo}
           alt="logo"
           className="w-1/2"
         />
 
-        <form className="w-full p-4 ml-2 mr-2" onSubmit={(e) => handleSubmit(e)}>
+        <form className="w-full p-4 pt-0 ml-2 mr-2" onSubmit={handleSubmit}>
           <fieldset className="flex flex-col justify-center items-center w-full">
-            {/* Confirm password */}
-            {/* <input
-              type="email"
-              name="emai"
-              id="email"
-              required
-              placeholder="E-mail"
-              className="border border-gray-300 p-4 rounded-full w-full"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            /> */}
-
             <input
               type="password"
               name="password"
               id="password"
               required
+              minLength="8"
+              maxLength="16"
+              title="Your password must be between 8 and 16 characters"
               placeholder="Password"
-              className="border border-gray-300 p-4 rounded-full w-full mt-6"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              className="border border-gray-300 p-4 rounded-full w-full mt-2 outline-none focus:border-blue-300"
+              onBlur={(event) => setPassword(event.target.value)}
             />
-            {/* Something like this */}
-            {/* <input 
-            name="passwordConfirmed"
-            type="password"
-            placeholder="Enter password again"
-            validate={{ match: { value: 'password' } }}
-            errorMessage="Password invalid, try it again!"
-            className="border border-gray-300 p-4 rounded-full w-full mt-6"
-            required
-            /> */}
+
+            <input
+              name="passwordConfirmed"
+              type="password"
+              placeholder="Enter password again"
+              minLength="8"
+              maxLength="16"
+              title="Your password must be between 8 and 16 characters"
+              className="border border-gray-300 p-4 rounded-full w-full mt-2 outline-none focus:border-blue-300"
+              required
+              onBlur={(event) => setConfirmPassword(event.target.value)}
+            />
+
+            {isValid ? (
+              <small
+                className={passwordIsGreaterThan8 ? "text-green-500 text-xs font-bold my-2" : "text-gray-500 text-xs font-bold my-2"}
+              >
+                {passwordIsGreaterThan8 ? "Valid password" : "Your password must be between 8 and 16 characters"}
+              </small>
+            ) : (
+              <small
+                className="text-red-500 text-xs font-bold my-2"
+              >
+                Passwords do not match, please retype
+              </small>
+            )
+            }
           </fieldset>
 
           <div className="mt-4 mr-32">
@@ -102,10 +129,13 @@ const CreateAccount = () => {
 
           <div className="flex justify-center items-center mt-6">
             <button
+              disabled={!isValid}
               type="submit"
-              className="mb-4 border-2 border-blue-300 bg-transparent rounded-full p-4 w-1/2 font-bold text-gray-600 text-center transition-all duration-300 hover:bg-blue-300"
+              className="disabled:opacity-20 flex justify-center items-center mb-4 border-2 border-blue-300 bg-transparent rounded-full p-4 w-1/2 font-bold text-gray-600 text-center transition-all duration-300 hover:bg-blue-300"
             >
-              Create account
+              {isFetching ? (
+                <Loading />
+              ) : 'Create account'}
             </button>
           </div>
         </form>

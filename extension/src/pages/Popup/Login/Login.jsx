@@ -1,11 +1,16 @@
 import React, { useState, useEffect } from "react";
 import "./index.css";
 import "../../../assets/css/tailwind.css";
-import { useHistory } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { loginUser } from "../../../store/auth";
-import Header from "../../../components/Header/Header";
+import 'react-toastify/dist/ReactToastify.css';
 import logo from "../../../assets/img/logo.svg";
+import Header from "../../../components/Header/Header";
+import Loading from "../../../components/Loading/Loading";
+import { useHistory } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { selectUser, loginUser, clearState } from "../../../store/auth";
+import { updateLastLogin, userIsLogged } from "../../../store/application";
+import rightArrow from "../../../assets/icon/right-arrow.svg";
+import { ToastContainer, toast } from 'react-toastify';
 
 const Login = () => {
   const [password, setPassword] = useState("");
@@ -13,22 +18,60 @@ const Login = () => {
   const dispatch = useDispatch();
   const history = useHistory();
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const { isFetching, isError, errorMessage, isSuccess } = useSelector(selectUser);
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
 
     if (password) {
-      dispatch(loginUser({
+      await dispatch(loginUser({
         password,
       }));
 
-      history.push("/dashboard");
+      // await dispatch(updateLastLogin(Date.now()));
+      // await dispatch(userIsLogged(true));
+
+      // if(isSuccess)
+      //   history.push("/dashboard");
+
+      return true;
     }
 
     return false;
   }
 
+  const handleMessage = (message) => {
+    toast.error(message, {
+      position: toast.POSITION.TOP_CENTER
+    });
+  };
+
+  const handleBlur = (event) => {
+    setPassword(event.target.value);
+  };
+
+  useEffect(() => {
+    console.log("checking what is happenign")
+    console.log(isError)
+    console.log(isSuccess)
+    if (isError) {
+      handleMessage(errorMessage);
+      dispatch(clearState())
+    }
+    else if (isSuccess) {
+      dispatch(clearState())
+      history.push("/dashboard");
+
+    }
+
+  }, [
+    isError,
+    isSuccess
+  ]);
+
   return (
     <div>
+      {/* LOGIN should not have how to go back one page */}
       <Header authPage />
 
       <div className="text-center mt-12 p-2 pb-0 flex flex-col items-center">
@@ -39,31 +82,46 @@ const Login = () => {
         />
         <h1 className="font-bold text-gray-700 text-4xl mb-4">Welcome back :)</h1>
 
-        <form className="w-full p-4 ml-2 mr-2" onSubmit={(e) => handleSubmit(e)}>
+        <form className="w-full p-4 ml-2 mr-2" onSubmit={handleSubmit}>
           <fieldset className="flex flex-col justify-center items-center w-full">
-
             <input
-              value={password}
               type="password"
               name="password"
               id="password"
               required
               placeholder="Password"
               className="border border-gray-300 p-4 rounded-full w-full mt-6"
-              onChange={(e) => setPassword(e.target.value)}
+              onBlur={handleBlur}
             />
           </fieldset>
+
+          <ToastContainer />
 
           <div className="flex justify-center items-center mt-6">
             <button
               type="submit"
-              className="mb-2 border-2 border-blue-300 bg-transparent rounded-full p-4 w-1/2 font-bold text-gray-600 text-center transition-all duration-300 hover:bg-blue-300">
-              Login
+              className="flex justify-center items-center mb-2 border-2 border-blue-300 bg-transparent rounded-full p-4 w-1/2 font-bold text-gray-600 text-center transition-all duration-300 hover:bg-blue-300"
+            >
+              {isFetching ? (
+                <Loading />
+              ) : 'Login'}
             </button>
           </div>
         </form>
       </div>
+
+      <div className="p-4 flex items-center cursor-pointer">
+        <img
+          src={rightArrow}
+          alt="restore account from seed phrase"
+          className="h-2 w-2 mr-2"
+        />
+        <p className="font-bold text-gray-700 text-xs">
+          Forgot password ? Restore account from seed phrase.
+      </p>
+      </div>
     </div>
+
   );
 };
 
