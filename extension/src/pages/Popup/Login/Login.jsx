@@ -7,8 +7,9 @@ import Header from "../../../components/Header/Header";
 import Loading from "../../../components/Loading/Loading";
 import { useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { selectUser, loginUser } from "../../../store/auth";
+import { selectUser, loginUser, clearState } from "../../../store/auth";
 import { updateLastLogin, userIsLogged } from "../../../store/application";
+import rightArrow from "../../../assets/icon/right-arrow.svg";
 import { ToastContainer, toast } from 'react-toastify';
 
 const Login = () => {
@@ -17,7 +18,7 @@ const Login = () => {
   const dispatch = useDispatch();
   const history = useHistory();
 
-  const { isFetching, isError, errorMessage } = useSelector(selectUser);
+  const { isFetching, isError, errorMessage, isSuccess } = useSelector(selectUser);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -27,12 +28,13 @@ const Login = () => {
         password,
       }));
 
-      await dispatch(updateLastLogin(Date.now()));
-      await dispatch(userIsLogged(true));
+      // await dispatch(updateLastLogin(Date.now()));
+      // await dispatch(userIsLogged(true));
 
-      history.push("/dashboard");
+      // if(isSuccess)
+      //   history.push("/dashboard");
 
-      return;
+      return true;
     }
 
     return false;
@@ -49,15 +51,27 @@ const Login = () => {
   };
 
   useEffect(() => {
+    console.log("checking what is happenign")
+    console.log(isError)
+    console.log(isSuccess)
     if (isError) {
       handleMessage(errorMessage);
+      dispatch(clearState())
     }
+    else if (isSuccess) {
+      dispatch(clearState())
+      history.push("/dashboard");
+
+    }
+
   }, [
     isError,
+    isSuccess
   ]);
 
   return (
     <div>
+      {/* LOGIN should not have how to go back one page */}
       <Header authPage />
 
       <div className="text-center mt-12 p-2 pb-0 flex flex-col items-center">
@@ -95,7 +109,19 @@ const Login = () => {
           </div>
         </form>
       </div>
+
+      <div className="p-4 flex items-center cursor-pointer">
+        <img
+          src={rightArrow}
+          alt="restore account from seed phrase"
+          className="h-2 w-2 mr-2"
+        />
+        <p className="font-bold text-gray-700 text-xs">
+          Forgot password ? Restore account from seed phrase.
+      </p>
+      </div>
     </div>
+
   );
 };
 

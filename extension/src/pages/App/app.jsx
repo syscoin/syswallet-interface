@@ -17,28 +17,33 @@ class App extends Component {
   }
 
   async checkAccount() {
-    const account = await Storage.getItem('vault');
+
+
+
+    const account = await Storage.getItem('LastkeySalt');
 
     if (!account) {
       this.props.setFirstTimeAccount();
-      this.props.push("/create-account");
+      this.history.push("/welcome");
 
       return;
     }
 
     const lastLoginAt = await Storage.getItem('LastLoginAt');
 
-    const isGreaterThanOneHour = !lastLoginAt || (Date.now() - lastLoginAt) > (60 * 1000); // 1min 
+    this.history.push("/login");
+    // TODO: This lock function needs to be moved to background
+    // const isGreaterThanOneHour = !lastLoginAt || (Date.now() - lastLoginAt) > (60 * 1000); // 1min 
 
-    if (isGreaterThanOneHour) {
-      this.props.logout();
+    // if (isGreaterThanOneHour) {
+    //   this.props.logout();
 
-      // if an hour (or 1min) has passed, redirect to login
-      this.history.push("/login");
-    } else {
-      this.props.userIsLogged(true);
-      this.history.push("/dashboard");
-    }
+    //   // if an hour (or 1min) has passed, redirect to login
+    //   this.history.push("/login");
+    // } else {
+    //   this.props.userIsLogged(true);
+    //   this.history.push("/dashboard");
+    // }
   }
 
   render() {

@@ -15,16 +15,26 @@ const CreateAccount = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [isValid, setIsValid] = useState(false);
 
-  const { isFetching } = useSelector(selectUser);
+
+  // TODO: add messages on UseSelect cases if error , if is success ( dispatch clearState , dispatch useLogin) --> if UserLogin success go to keyphrase
+  const { isFetching, isError, errorMessage, isSuccess } = useSelector(selectUser);
+
 
   const dispatch = useDispatch();
   const history = useHistory();
 
   useEffect(() => {
     setIsValid(password == confirmPassword);
+    // if (isError) {
+    //   handleMessage(errorMessage);
+    // }
+    if (isSuccess) {
+      history.push("/confirm-keyphrase");
+    }
   }, [
     password,
-    confirmPassword
+    confirmPassword,
+    isSuccess
   ]);
 
   const passwordIsGreaterThan8 = password.length >= 8 && confirmPassword.length >= 8;
@@ -41,10 +51,10 @@ const CreateAccount = () => {
         password,
       }));
 
-      dispatch(updateLastLogin(Date.now()));
-      dispatch(userIsLogged(true));
+      // dispatch(updateLastLogin(Date.now()));
+      // dispatch(userIsLogged(true));
 
-      history.push("/confirm-keyphrase");
+
     }
   }
 
@@ -93,12 +103,12 @@ const CreateAccount = () => {
                 {passwordIsGreaterThan8 ? "Valid password" : "Your password must be between 8 and 16 characters"}
               </small>
             ) : (
-                <small
-                  className="text-red-500 text-xs font-bold my-2"
-                >
-                  Passwords do not match, please retype
-                </small>
-              )
+              <small
+                className="text-red-500 text-xs font-bold my-2"
+              >
+                Passwords do not match, please retype
+              </small>
+            )
             }
           </fieldset>
 

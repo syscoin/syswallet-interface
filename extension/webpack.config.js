@@ -10,8 +10,7 @@ var webpack = require('webpack'),
 const ASSET_PATH = process.env.ASSET_PATH || '/';
 
 var alias = {
-  'react-dom': '@hot-loader/react-dom',
-  'process': 'process/browser'
+  'react-dom': '@hot-loader/react-dom'
 };
 
 // load the secrets
@@ -116,7 +115,15 @@ var options = {
       .concat(['.js', '.jsx', '.ts', '.tsx', '.css']),
     fallback: {
       "crypto": require.resolve("crypto-browserify"),
-      "stream": require.resolve("stream-browserify")
+      "stream": require.resolve("stream-browserify"),
+      "assert": require.resolve("assert/"),
+      "constants": require.resolve("constants-browserify"),
+      "path": require.resolve("path-browserify"),
+      "http": require.resolve("stream-http"),
+      "https": require.resolve("https-browserify"),
+      "os": require.resolve("os-browserify/browser"),
+      "fs": require.resolve("fs-extra")
+
     },
   },
   plugins: [

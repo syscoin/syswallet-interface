@@ -9,11 +9,11 @@ import { useDispatch } from 'react-redux';
 const ConfirmKeyPhrase = () => {
   const dispatch = useDispatch();
   const history = useHistory();
-
+  // TODO get keyprashe from wallet state mnemonic 
   const RenderPhrase = () => {
     return phrase.map((word, index) => {
       return (
-        <div 
+        <div
           className="p-2 rounded bg-gray-100 border border-gray-200 w-1/4"
           key={index}
         >
@@ -34,7 +34,7 @@ const ConfirmKeyPhrase = () => {
       <div className="flex flex-wrap gap-4 justify-center items-center p-4 mt-2">
         <RenderPhrase />
 
-        <button 
+        <button
           onClick={() => history.push("/dashboard")}
           className="w-full p-2 mt-4 mx-8 rounded-full text-center border border-blue-400 cursor-pointer transition-all duration-300 hover:bg-blue-400 text-gray-800 font-bold"
         >
