@@ -1,15 +1,11 @@
 import React, { useState, useEffect } from "react";
-import "./index.css";
-import "../../../assets/css/tailwind.css";
-import 'react-toastify/dist/ReactToastify.css';
 import logo from "../../../assets/img/logo.svg";
 import Header from "../../../components/Header/Header";
 import Loading from "../../../components/Loading/Loading";
-import { useHistory } from "react-router-dom";
+import store from "../../../store/store";
+import { useHistory, Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { selectUser, loginUser, clearState } from "../../../store/auth";
-import { updateLastLogin, userIsLogged } from "../../../store/application";
-import rightArrow from "../../../assets/icon/right-arrow.svg";
+// import { selectUser, loginUser, clearState } from "../../../store/auth";
 import { ToastContainer, toast } from 'react-toastify';
 
 const Login = () => {
@@ -18,61 +14,54 @@ const Login = () => {
   const dispatch = useDispatch();
   const history = useHistory();
 
-  const { isFetching, isError, errorMessage, isSuccess } = useSelector(selectUser);
+  // const { isFetching, isError, errorMessage, isSuccess } = useSelector(selectUser);
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
+  // const handleSubmit = async (event) => {
+  //   event.preventDefault();
 
-    if (password) {
-      await dispatch(loginUser({
-        password,
-      }));
+  //   if (password) {
+  //     console.log('is valid password')
+  //     await store.dispatch(loginUser(password));
+  //   }
 
-      // await dispatch(updateLastLogin(Date.now()));
-      // await dispatch(userIsLogged(true));
+  //   return false;
+  // }
 
-      // if(isSuccess)
-      //   history.push("/dashboard");
+  // const handleMessage = (message) => {
+  //   toast.error(message, {
+  //     position: toast.POSITION.TOP_CENTER
+  //   });
+  // };
 
-      return true;
-    }
+  // const handleBlur = (event) => {
+  //   setPassword(event.target.value);
+  // };
 
-    return false;
-  }
+  // useEffect(() => {
+  //   console.log("checking what is happenign")
+  //   console.log('is error login', isError)
+  //   console.log('is success login', isSuccess)
+  //   console.log('is fetching login', isFetching)
 
-  const handleMessage = (message) => {
-    toast.error(message, {
-      position: toast.POSITION.TOP_CENTER
-    });
-  };
+  //   if (isError) {
+  //     handleMessage(errorMessage);
 
-  const handleBlur = (event) => {
-    setPassword(event.target.value);
-  };
+  //     dispatch(clearState());
+  //   } else if (isSuccess) {
+  //     store.dispatch(clearState());
 
-  useEffect(() => {
-    console.log("checking what is happenign")
-    console.log(isError)
-    console.log(isSuccess)
-    if (isError) {
-      handleMessage(errorMessage);
-      dispatch(clearState())
-    }
-    else if (isSuccess) {
-      dispatch(clearState())
-      history.push("/dashboard");
+  //     history.push("/dashboard");
+  //   }
 
-    }
-
-  }, [
-    isError,
-    isSuccess
-  ]);
+  // }, [
+  //   isError,
+  //   isSuccess,
+  //   isFetching
+  // ]);
 
   return (
     <div>
-      {/* LOGIN should not have how to go back one page */}
-      <Header authPage />
+      <Header />
 
       <div className="text-center mt-12 p-2 pb-0 flex flex-col items-center">
         <img
@@ -80,9 +69,9 @@ const Login = () => {
           alt="logo"
           className="w-1/2"
         />
-        <h1 className="font-bold text-gray-700 text-4xl mb-4">Welcome back :)</h1>
+        <h1 className="font-bold text-gray-700 text-4xl mb-8">Welcome back :)</h1>
 
-        <form className="w-full p-4 ml-2 mr-2" onSubmit={handleSubmit}>
+        <form className="w-full px-4 mx-2" /* onSubmit={handleSubmit} */>
           <fieldset className="flex flex-col justify-center items-center w-full">
             <input
               type="password"
@@ -90,38 +79,32 @@ const Login = () => {
               id="password"
               required
               placeholder="Password"
-              className="border border-gray-300 p-4 rounded-full w-full mt-6"
-              onBlur={handleBlur}
+              className="border border-gray-300 p-4 rounded-full w-full my-4 outline-none focus:border-blue-400"
+             /* onBlur={handleBlur} */
             />
           </fieldset>
 
-          <ToastContainer />
 
-          <div className="flex justify-center items-center mt-6">
+          <Link to="/import-from-seed-phrase" className="mt-4 text-gray-500 text-xs transition-all duration-300 hover:text-gray-700">
+            Forgot password? Restore account from seed phrase.
+          </Link>
+
+          <div className="flex justify-center items-center mt-12">
             <button
               type="submit"
-              className="flex justify-center items-center mb-2 border-2 border-blue-300 bg-transparent rounded-full p-4 w-1/2 font-bold text-gray-600 text-center transition-all duration-300 hover:bg-blue-300"
+              className="flex justify-center items-center mb-2 border-2 border-blue-300 bg-transparent rounded-full p-4 w-2/3 font-bold text-gray-600 text-center transition-all duration-300 hover:bg-blue-300"
             >
-              {isFetching ? (
+              {/* {isFetching ? (
                 <Loading />
-              ) : 'Login'}
+              ) : 'Login'} */}
+              login
             </button>
           </div>
         </form>
       </div>
 
-      <div className="p-4 flex items-center cursor-pointer">
-        <img
-          src={rightArrow}
-          alt="restore account from seed phrase"
-          className="h-2 w-2 mr-2"
-        />
-        <p className="font-bold text-gray-700 text-xs">
-          Forgot password ? Restore account from seed phrase.
-      </p>
-      </div>
+      <ToastContainer />
     </div>
-
   );
 };
 

@@ -47,6 +47,7 @@ var options = {
     login: path.join(__dirname, 'src', 'pages', 'Popup', 'Login', 'index.jsx'),
     dashboard: path.join(__dirname, 'src', 'pages', 'Popup', 'Dashboard', 'index.jsx'),
     confirmKeyPhrase: path.join(__dirname, 'src', 'pages', 'Popup', 'ConfirmKeyPhrase', 'index.jsx'),
+    importFromSeedPhrase: path.join(__dirname, 'src', 'pages', 'Popup', 'ImportFromSeedPhrase', 'index.jsx'),
   },
   chromeExtensionBoilerplate: {
     notHotReload: ['contentScript', 'devtools'],
@@ -237,6 +238,12 @@ var options = {
       template: path.join(__dirname, 'src', 'pages', 'Popup', 'ConfirmKeyPhrase', 'index.html'),
       filename: 'confirm-keyphrase.html',
       chunks: ['confirmKeyPhrase'],
+      cache: false,
+    }),
+    new HtmlWebpackPlugin({
+      template: path.join(__dirname, 'src', 'pages', 'Popup', 'ImportFromSeedPhrase', 'index.html'),
+      filename: 'import-from-seed-phrase.html',
+      chunks: ['importFromSeedPhrase'],
       cache: false,
     }),
   ],

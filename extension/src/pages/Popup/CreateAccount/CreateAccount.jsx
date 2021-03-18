@@ -1,21 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import "./index.css";
-import "../../../assets/css/tailwind.css";
 import logo from '../../../assets/img/logo.svg';
 import Header from "../../../components/Header/Header";
 import Loading from "../../../components/Loading/Loading";
+import store from "../../../store/store";
 import { useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { loginUser, signupUser, selectUser } from "../../../store/auth";
-import { updateLastLogin, userIsLogged } from "../../../store/application";
+import { signupUser, selectUser } from "../../../store/auth";
 
 const CreateAccount = () => {
   const checkbox = document.querySelector("#agree");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [isValid, setIsValid] = useState(false);
-
-
   // TODO: add messages on UseSelect cases if error , if is success ( dispatch clearState , dispatch useLogin) --> if UserLogin success go to keyphrase
   const { isFetching, isError, errorMessage, isSuccess } = useSelector(selectUser);
 
@@ -25,16 +21,21 @@ const CreateAccount = () => {
 
   useEffect(() => {
     setIsValid(password == confirmPassword);
-    // if (isError) {
-    //   handleMessage(errorMessage);
-    // }
+
     if (isSuccess) {
       history.push("/confirm-keyphrase");
     }
+
+    // if (isError) {
+    //   // handleMessage(errorMessage);
+    //   alert('erro ao criar a conta')
+    // }
   }, [
     password,
     confirmPassword,
-    isSuccess
+    isSuccess,
+    // isError,
+    isFetching
   ]);
 
   const passwordIsGreaterThan8 = password.length >= 8 && confirmPassword.length >= 8;
@@ -43,26 +44,17 @@ const CreateAccount = () => {
     event.preventDefault();
 
     if (isValid && checkbox.checked) {
-      await dispatch(signupUser({
-        password,
-      }));
-
-      await dispatch(loginUser({
-        password,
-      }));
-
-      // dispatch(updateLastLogin(Date.now()));
-      // dispatch(userIsLogged(true));
-
-
+      await store.dispatch(signupUser(password));
     }
   }
+
+  window.store = callback => callback(store);
 
   return (
     <div>
       <Header authPage />
 
-      <div className="text-center mt-8 p-2 pb-0 flex flex-col items-center">
+      <div className="text-center mt-16 mb-4 p-2 pb-0 flex flex-col items-center">
         <img
           src={logo}
           alt="logo"
@@ -103,12 +95,12 @@ const CreateAccount = () => {
                 {passwordIsGreaterThan8 ? "Valid password" : "Your password must be between 8 and 16 characters"}
               </small>
             ) : (
-              <small
-                className="text-red-500 text-xs font-bold my-2"
-              >
-                Passwords do not match, please retype
-              </small>
-            )
+                <small
+                  className="text-red-500 text-xs font-bold my-2"
+                >
+                  Passwords do not match, please retype
+                </small>
+              )
             }
           </fieldset>
 
@@ -127,15 +119,15 @@ const CreateAccount = () => {
               </label>
           </div>
 
-          <div className="flex justify-center items-center mt-6">
+          <div className="flex justify-center items-center mt-8">
             <button
               disabled={!isValid}
               type="submit"
-              className="disabled:opacity-20 flex justify-center items-center mb-4 border-2 border-blue-300 bg-transparent rounded-full p-4 w-1/2 font-bold text-gray-600 text-center transition-all duration-300 hover:bg-blue-300"
+              className="disabled:opacity-20 flex justify-center items-center mb-4 border-2 border-blue-300 bg-transparent rounded-full p-4 w-2/3 font-bold text-gray-600 text-center transition-all duration-300 hover:bg-blue-300"
             >
               {isFetching ? (
                 <Loading />
-              ) : 'Create account'}
+              ) : 'Create wallet'}
             </button>
           </div>
         </form>

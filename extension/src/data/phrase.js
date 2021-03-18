@@ -1,1 +1,1 @@
-export default ['lorem', 'ipsum', 'dolor', 'sit', 'amet', 'consectetur', 'elit', 'neque', 'aliquid', 'dolore', 'impedit', 'vero'];
+export default ['lorem', 'lorem', 'lorem', 'lorem', 'lorem', 'lorem', 'lorem', 'lorem', 'lorem', 'lorem', 'lorem', 'lorem'];

@@ -1,17 +1,16 @@
 import React, { useState } from 'react';
-import "./index.css";
-import "../../../assets/css/tailwind.css";
 import { useHistory } from "react-router-dom";
 import Header from "../../../components/Header/Header";
-import phrase from "../../../data/phrase";
-import { useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
+import { selectUser } from "../../../store/auth";
 
 const ConfirmKeyPhrase = () => {
-  const dispatch = useDispatch();
   const history = useHistory();
-  // TODO get keyprashe from wallet state mnemonic 
+  const user = useSelector(selectUser);
+  const seed = user.decryptedwallet[0].mnemonic.split(' ');
+  
   const RenderPhrase = () => {
-    return phrase.map((word, index) => {
+    return seed.map((word, index) => {
       return (
         <div
           className="p-2 rounded bg-gray-100 border border-gray-200 w-1/4"

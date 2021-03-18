@@ -2,29 +2,28 @@ import React from "react";
 import leftArrow from "../../assets/icon/left-arrow.svg";
 import bg from "../../assets/img/bg.png";
 import logo from "../../assets/img/logo.svg";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 
 const Header = props => {
+  const history = useHistory();
+
   return (
     <div>
       <header className="flex justify-between items-center p-2 h-20 bg-blue-50">
         {props.authPage ? (
-          <Link
-            to="/"
-            className="ml-2 font-bold text-4xl text-blue-400"
-          >
+          <button onClick={() => history.goBack()}>
             <img
               src={leftArrow}
               alt="back to home"
-              className="w-4 h-4"
+              className="w-4 h-4 ml-2"
             />
-          </Link>
+          </button>
         ) : (
-          <img
-            src={logo}
-            className="w-16" alt="logo"
-          />
-        )}
+            <img
+              src={logo}
+              className="w-16" alt="logo"
+            />
+          )}
         <select
           className="p-2 rounded-full w-1/2 bg-transparent border border-blue-200 font-bold text-gray-600">
           <option

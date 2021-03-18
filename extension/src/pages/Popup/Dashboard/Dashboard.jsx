@@ -1,6 +1,4 @@
 import React from "react";
-import "./index.css";
-import "../../../assets/css/tailwind.css";
 import icons from "../../../data/icons";
 import Header from "../../../components/Header/Header";
 import ethereum from "../../../assets/icon/ethereum.svg";
@@ -50,7 +48,7 @@ const Dashboard = () => {
         />
       </div>
 
-      <div className="flex flex-col justify-center items-center mt-4">
+      <div className="flex flex-col justify-center items-center mt-12">
         <img 
           src={ethereum} 
           alt="logo ethereum"
@@ -65,9 +63,8 @@ const Dashboard = () => {
         <RenderIcon />
       </div>
 
-      <div className="flex w-full items-center justify-between mt-8">
-        <p className="transition-all duration-300 w-1/2 text-blue-400 text-xs font-bold border-b-2 border-blue-400 p-2 cursor-pointer text-center hover:bg-blue-100">Assets</p>
-        <p className="transition-all duration-300 w-1/2 text-blue-400 text-xs font-bold border-2 border-r-0 border-t-0 border-gray-200 p-2 cursor-pointer text-center hover:bg-blue-100">Activity</p>
+      <div className="mt-8">
+        <p className="transition-all duration-300 w-full text-blue-400 text-base font-bold border-b-2 border-blue-400 p-2 cursor-pointer text-center hover:bg-blue-100">Assets</p>
       </div>
 
       <div className="flex items-center p-2 border-b-2 border-gray-200">

@@ -1,6 +1,10 @@
-console.log('This is the background page.');
-console.log('Put the background scripts here.');
+import store, { handleLoadState } from '../../store/store';
+import { wrapStore } from 'webext-redux';
 
-chrome.browserAction.onClicked.addListener((tab) => {
-  console.log(tab)
-})
+wrapStore(store);
+
+chrome.runtime.onMessage.addListener((message) => {
+  console.log('message received', message)
+});
+
+if (module.hot) module.hot.accept();

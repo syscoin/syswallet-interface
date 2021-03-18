@@ -1,11 +1,13 @@
 import React, { Component } from "react";
+import "./index.css";
+import "../../assets/css/tailwind.css";
+import 'react-toastify/dist/ReactToastify.css';
 import AppRoute from "./routes/route";
 import Storage from '../../helpers/Storage';
 import { Switch, Router } from "react-router-dom";
-import { authProtectedRoutes, publicRoutes } from "./routes/";
+import { authProtectedRoutes, publicRoutes } from "./routes";
 import { createBrowserHistory } from "history";
-import { userIsLogged, setFirstTimeAccount, logout } from "../../store/application";
-import { connect } from 'react-redux';
+
 
 class App extends Component {
   constructor(props) {
@@ -17,19 +19,16 @@ class App extends Component {
   }
 
   async checkAccount() {
-
-
-
     const account = await Storage.getItem('LastkeySalt');
 
     if (!account) {
-      this.props.setFirstTimeAccount();
       this.history.push("/welcome");
+      // estado no auth pra import from seed
 
       return;
     }
 
-    const lastLoginAt = await Storage.getItem('LastLoginAt');
+    // const lastLoginAt = await Storage.getItem('LastLoginAt');
 
     this.history.push("/login");
     // TODO: This lock function needs to be moved to background
@@ -75,12 +74,4 @@ class App extends Component {
   }
 }
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    userIsLogged: (data) => dispatch(userIsLogged(data)),
-    setFirstTimeAccount: () => dispatch(setFirstTimeAccount()),
-    logout: () => dispatch(logout())
-  }
-};
-
-export default connect(null, mapDispatchToProps)(App);
+export default App;
