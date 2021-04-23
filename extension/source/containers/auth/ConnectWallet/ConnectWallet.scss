@@ -1,0 +1,133 @@
+@import '~assets/styles/variables';
+
+.home {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  right: 0px;
+  min-height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  box-sizing: border-box;
+  text-align: center;
+  background: $navy;
+
+  .loading {
+    margin-top: .5rem;
+  }
+
+  .error {
+    color: white;
+    font-size: 12px;
+    position: absolute;
+    width: calc(100% - 112px);
+    bottom: 132px;
+  }
+
+  .list {
+    width: 85%;
+    max-height: 210px;
+    background-color: #f5f5f5;
+    border-radius: 6px;
+    text-align: center;
+    overflow: auto;
+    margin-bottom: 2rem;
+    padding: 0;
+
+    & > p {
+      color: $gray-dark;
+      font-size: 16px;
+      font-weight: bold;
+    }
+  }
+
+  .actions {
+    position: absolute;
+    bottom: 24px;
+    width: calc(100% - 72px);
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+
+    &.centered {
+      justify-content: center;
+    }
+
+    .button {
+      width: 144px;
+    }
+  }
+
+  & > h1 {
+    color: white;
+    margin-top: -40px;
+  }
+
+  .cancel {
+    margin-right: 1rem;
+  }
+
+  .next {
+    background-color: green;
+  }
+
+  & > small {
+    position: absolute;
+    bottom: 80px;
+    color: $gray-light;
+    padding: 3px;
+    font-size: 14px;
+  }
+
+  & > p {
+    color: $gray-light;
+    font-size: 12px;
+    margin: .3rem;
+  }
+
+  .account {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 17px;
+    border: 1px solid #e2e2e2;
+    cursor: pointer;
+    padding: .7rem 1.4rem;
+
+    &:hover {
+      background-color: #f0f0f0;
+    }
+
+    .label {
+      display: flex;
+      flex-direction: column;
+      text-align: left;
+
+      & > p {
+        margin: 0 0 .2rem 0;
+      }
+
+      & > small {
+        font-size: 12px;
+      }
+    }
+  }
+
+  .connectedTitle {
+    color: white;
+    margin-top: -40px;
+    margin: 0 2rem 1rem;
+
+    & > p {
+      font-size: 1.4rem;
+      font-weight: bold;
+    }
+
+    & > small {
+      font-size: .8rem;
+    }
+  }
+}

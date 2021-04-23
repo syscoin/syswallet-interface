@@ -1,0 +1,14 @@
+@import '../../../assets/styles/variables';
+
+.container {
+  width: 372px;
+  height: 600px;
+  font-size: 20px;
+  min-width: 372px;
+  display: flex;
+  position: relative;
+  padding: 0px;
+  margin: 0px;
+  align-items: center;
+  justify-content: center;
+}
